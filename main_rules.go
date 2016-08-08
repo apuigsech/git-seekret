@@ -7,14 +7,35 @@ import(
 	"github.com/urfave/cli"
 )
 
-func loadRules() error {
-	s.LoadRulesFromPath(os.Getenv("SEEKRET_RULES_PATH"), false)
+func GitSeekretRules(c *cli.Context) error {
+	enable := c.String("enable")
+	disable := c.String("disable")
 
-	if _, err := os.Stat(GitSeekretEnabledRulesFile); os.IsNotExist(err) {
+	if enable != "" {
+		s.EnableRule(enable)
+	}
+
+	if disable != "" {
+		s.DisableRule(disable)
+	}
+
+	fmt.Println("List of rules:")
+	for _, r := range s.ListRules() {
+		status := " "
+		if r.Enabled {
+			status = "x"
+		}
+		fmt.Printf("\t[%s] %s\n", status, r.Name)
+	}
+	return nil
+}
+
+func loadEnabledRules() error {
+	if _, err := os.Stat(gitSeekretCurrentConfig.rulesenabled); os.IsNotExist(err) {
 		return nil
 	}
 
-	fh, err := os.Open(GitSeekretEnabledRulesFile)
+	fh, err := os.Open(gitSeekretCurrentConfig.rulesenabled)
 	if err != nil {
     	return err
   	}	
@@ -28,8 +49,8 @@ func loadRules() error {
   	return nil
 }
 
-func saveRules() error {
-	fh, err := os.Create(GitSeekretEnabledRulesFile)
+func saveEnabledRules() error {
+	fh, err := os.Create(gitSeekretCurrentConfig.rulesenabled)
 	if err != nil {
     	return err
   	}
@@ -42,41 +63,4 @@ func saveRules() error {
 		}
 	}
 	return w.Flush()
-}
-
-func GitSeekretRulesList(c *cli.Context) error {
-	listRules := s.ListRules()
-	fmt.Println("List of rules:")
-	for _, r := range listRules {
-		status := " "
-		if r.Enabled {
-			status = "x"
-		}
-		fmt.Printf("\t[%s] %s\n", status, r.Name)
-	}
-	return nil
-}
-
-func GitSeekretRulesEnable(c *cli.Context) error {
-	rule := c.Args().Get(0)
-	if rule == ""  {
-		cli.ShowSubcommandHelp(c)
-		return nil
-	}
-
-	s.EnableRule(rule)
-
-	return nil
-}
-
-func GitSeekretRulesDisable(c *cli.Context) error {
-	rule := c.Args().Get(0)
-	if rule == ""  {
-		cli.ShowSubcommandHelp(c)
-		return nil
-	}
-
-	s.DisableRule(rule)
-
-	return nil
 }

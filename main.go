@@ -53,28 +53,35 @@ func main() {
 		{
 			Name: "rules",
 			Usage: "Manage rules",
-			Subcommands: []cli.Command{
-				{
-					Name: "list",
+			Action: GitSeekretRules,
+			Flags: 	[]cli.Flag {
+				cli.StringFlag{
+					Name:  "enable, e",
 					Usage: "TBD",
-					Action: GitSeekretRulesList,
+					Value: "",
 				},
-				{
-					Name: "enable",
+				cli.StringFlag{
+					Name:  "disable, d",
 					Usage: "TBD",
-					Action: GitSeekretRulesEnable,
+					Value: "",
 				},
-				{
-					Name: "disable",
-					Usage: "TBD",
-					Action: GitSeekretRulesDisable,
-				},
-			},
+			},	
 		},
 		{
 			Name:     "check",
 			Usage:    "TBD",
-			Action:   GitSeekretCheck,			
+			Action:   GitSeekretCheck,
+			Flags: 	[]cli.Flag {
+				cli.IntFlag{
+					Name:  "commit, c",
+					Usage: "inspect commited files. Argument is the number of commits to inspect (0 = all)",
+					Value: 0,
+				},
+				cli.BoolFlag{
+					Name:  "staged, s",
+					Usage: "inspect staged files",
+				},
+			},				
 		},
 	}
 
@@ -93,10 +100,16 @@ func gitSeekretBefore(c *cli.Context) error {
 		return err
 	}
 
+	if err = s.LoadRulesFromPath(gitSeekretCurrentConfig.rulespath, false); err != nil {
+		return err
+	}
+
+	loadEnabledRules()
+
 	return nil
 }
 
 
 func gitSeekretAfter(c *cli.Context) error {
-	return saveRules()
+	return saveEnabledRules()
 }
