@@ -2,65 +2,46 @@ package main
 
 import(
 	"fmt"
-	"os"
-	"bufio"
 	"github.com/urfave/cli"
+	"github.com/libgit2/git2go"
 )
 
 func GitSeekretRules(c *cli.Context) error {
+	err := gs.LoadConfig(true)
+	if git.IsErrorClass(err, git.ErrClassConfig) {
+		return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
+	}
+	if err != nil {
+		return err
+	}	
+
 	enable := c.String("enable")
 	disable := c.String("disable")
 
 	if enable != "" {
-		s.EnableRule(enable)
+		err := gs.EnableRule(enable)
+		if err != nil {
+			return err
+		}
 	}
 
 	if disable != "" {
-		s.DisableRule(disable)
+		err := gs.DisableRule(disable)
+		if err != nil {
+			return err
+		}
 	}
 
 	fmt.Println("List of rules:")
-	for _, r := range s.ListRules() {
+	for _, r := range gs.seekret.ListRules() {
 		status := " "
 		if r.Enabled {
 			status = "x"
 		}
 		fmt.Printf("\t[%s] %s\n", status, r.Name)
 	}
+
+	gs.SaveConfig()
+	
 	return nil
-}
-
-func loadEnabledRules() error {
-	if _, err := os.Stat(gitSeekretCurrentConfig.rulesenabled); os.IsNotExist(err) {
-		return nil
-	}
-
-	fh, err := os.Open(gitSeekretCurrentConfig.rulesenabled)
-	if err != nil {
-    	return err
-  	}	
-  	defer fh.Close()
-
-  	scanner := bufio.NewScanner(fh)
-  	for scanner.Scan() {
-  		rule := scanner.Text()
-  		s.EnableRule(rule)
-  	}
-  	return nil
-}
-
-func saveEnabledRules() error {
-	fh, err := os.Create(gitSeekretCurrentConfig.rulesenabled)
-	if err != nil {
-    	return err
-  	}
-	defer fh.Close()
-
-	w := bufio.NewWriter(fh)
-	for _,r := range s.ListRules() {
-		if r.Enabled {
-			fmt.Fprintln(w, r.Name)
-		}
-	}
-	return w.Flush()
 }

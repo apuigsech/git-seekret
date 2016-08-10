@@ -3,10 +3,19 @@ package main
 import (
 	"fmt"
 	"github.com/urfave/cli"
+	"github.com/libgit2/git2go"
 	seekret "github.com/apuigsech/seekret/lib"
 )
 
 func GitSeekretCheck(c *cli.Context) error {
+	err := gs.LoadConfig(true)
+	if git.IsErrorClass(err, git.ErrClassConfig) {
+		return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
+	}
+	if err != nil {
+		return err
+	}	
+
 	options := map[string]interface{}{
 		"commit": false,
 		"staged": false,
@@ -21,16 +30,25 @@ func GitSeekretCheck(c *cli.Context) error {
 		options["staged"] = true
 	}
 
-	err := s.LoadObjects(seekret.SourceTypeGit, ".", options)
+	err = gs.seekret.LoadObjects(seekret.SourceTypeGit, ".", options)
 	if err != nil {
 		return err
 	}
 
-	s.Inspect(4)
+	gs.seekret.Inspect(4)
 
-	for _,x := range s.ListSecrets() {
-		fmt.Printf("%#v\n", x)
+	fmt.Printf("Found Secrets:\n")
+	for _,s := range gs.seekret.ListSecrets() {
+		fmt.Printf("\t%s:%d\n", s.Object.Name, s.Nline)
+		fmt.Printf("\t\t- Metadata:\n")
+		for k,v := range s.Object.Metadata {
+			fmt.Printf("\t\t  %s: %s\n", k, v)
+		}
+		fmt.Printf("\t\t- Rule:\n\t\t  %s\n", s.Rule.Name)
+
+		fmt.Printf("\t\t- Content:\n\t\t  %s\n", s.Line)
 	}
 
 	return nil
 }
+

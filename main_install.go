@@ -5,8 +5,7 @@ import (
 )
 
 func GitSeekretInstall(c *cli.Context) error {
-	gsc := gitSeekretDefaultConfig
-	gsc.gitConfig = gitSeekretCurrentConfig.gitConfig
-	gsc.SaveConfig()
+	gs.InitConfig()
+	gs.SaveConfig()
 	return nil
 }
