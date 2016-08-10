@@ -1,21 +1,15 @@
 package main
 
 import (
-	seekret "github.com/apuigsech/seekret/lib"
+	"log"
+	"github.com/libgit2/git2go"
 	"github.com/urfave/cli"
 	"os"
 )
 
-const (
-	GitSeekretBaseFolder = ".git/seekret/"
-	GitSeekretEnabledRulesFile = GitSeekretBaseFolder + "xxxx"
-)
-
-var s *seekret.Seekret
+var gs *gitSeekret
 
 func main() {
-	s = seekret.NewSeekret()
-
 	app := cli.NewApp()
 
 	app.Name = "git-seekret"
@@ -34,15 +28,14 @@ func main() {
 	}
 	app.Commands = []cli.Command{
 		{
-			Name:     "install",
-			Usage:    "TBD",
-			Action:   GitSeekretInstall,
-		},
-		{
 			Name:	"config",
 			Usage:  "TBD",
 			Action:   GitSeekretConfig,
 			Flags: 	[]cli.Flag {
+				cli.BoolFlag{
+					Name: "init",
+					Usage: "TBD",
+				},
 				cli.StringFlag{
 					Name:  "set, s",
 					Usage: "TBD",
@@ -93,23 +86,24 @@ func main() {
 
 
 func gitSeekretBefore(c *cli.Context) error {
-	gitSeekretCurrentConfig = NewGitSeekretConfig()
+	var configLevel git.ConfigLevel
+	var err error
 
-	err := gitSeekretCurrentConfig.LoadConfig(c.Bool("global"))
+	if c.Bool("global") {
+		configLevel = git.ConfigLevelGlobal
+	} else {
+		configLevel = git.ConfigLevelLocal
+	}
+
+	gs,err = NewGitSeekret(configLevel, ".")
 	if err != nil {
-		return err
+		log.Panic(err)
 	}
-
-	if err = s.LoadRulesFromPath(gitSeekretCurrentConfig.rulespath, false); err != nil {
-		return err
-	}
-
-	loadEnabledRules()
 
 	return nil
 }
 
 
 func gitSeekretAfter(c *cli.Context) error {
-	return saveEnabledRules()
+	return nil 
 }
