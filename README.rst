@@ -1,18 +1,57 @@
-|Build Status| |Documentation Status|
+|Build Status|
 
 ===========
 git-seekret
 ===========
 
-Git module to prevent commit secrets.
+Git module to prevent from commiting sensitive information into the repository.
 
-NOTE: It's not ready to be used.
+Description
+===========
+
+``git-seekret`` inspect on commits and/or staged (and uncommited yet) files, to 
+prevent adding sensitive information into the git repository. It can be easily
+integrated with git hooks, forcing it to analise all staged files before they are
+included into a commit.
 
 
-Interactive session
-===================
+Installing git-seekret
+======================
+
+``git-sekret``can be directly insyalled by using go get.
+
+	go get github.com/apuigsech/git-seekret
+
+It's important to have the following tools and libraries to make it work properly:
+
+	* pkg-config
+	* golang >= 1.6
+	* libgit >= 2.24
+
+
+Usage
+=====
+
+TBD
+
+
+Rules and Exceptions
+====================
+
+The definition of rules and exceptions for ``git-seekret`` are defined by the seekret go library. A proper documentatio for this library can be found here;
+
+	https://github.com/apuigsech/seekret
+
+
+
+
+Hands-On
+========
+
+The repository seekret-secrets is prepare to test ``git-seekret`, and can be used to perform the following hands-on examples:
 
 ::
+
 	$ git clone https://github.com/apuigsech/seekret-secrets
 
 	$ cd seekret-secrets
@@ -70,14 +109,14 @@ Interactive session
 			  password = 'thisISnotSECRET'
 
 		... 
-
+	
 	$ git seekret check -s     # Check on staged files.
 	Found Secrets: 0
-
+	
 	$ echo "password = 'this is super secret'" > new_file
-
+	
 	$ git add new_file
-
+	
 	$ git seekret check -s
 	Found Secrets: 1
 		new_file:1
