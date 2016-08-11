@@ -59,6 +59,12 @@ func setConfig(gsc *gitSeekretConfig, key string, value interface{}) (error) {
 			gsc.rulespath = rulespath
 		case "rulesenabled":
 			return fmt.Errorf("not suported - change enabled rules using 'git-seekret rules'")
+		case "exceptionsfile":
+			exceptionsfile, ok := value.(string)
+			if !ok {
+				return fmt.Errorf("invalid format")
+			}
+			gsc.exceptionsfile = exceptionsfile		
 	}
 	return nil
 }
@@ -68,4 +74,5 @@ func showConfig(gitSeekretConfig *gitSeekretConfig) {
 	fmt.Printf("\tversion = %d\n", gitSeekretConfig.version)
 	fmt.Printf("\trulespath = %s\n", gitSeekretConfig.rulespath)
 	fmt.Printf("\trulesenabled = %s\n", gitSeekretConfig.rulesenabled)
+	fmt.Printf("\texceptionsfile = %s\n", gitSeekretConfig.exceptionsfile)
 }

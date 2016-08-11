@@ -74,7 +74,7 @@ func main() {
 					Name:  "staged, s",
 					Usage: "inspect staged files",
 				},
-			},				
+			},
 		},
 	}
 
@@ -105,5 +105,5 @@ func gitSeekretBefore(c *cli.Context) error {
 
 
 func gitSeekretAfter(c *cli.Context) error {
-	return nil 
+	return nil
 }

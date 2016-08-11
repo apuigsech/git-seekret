@@ -11,6 +11,7 @@ type gitSeekretConfig struct {
 	version int32
 	rulespath string
 	rulesenabled string
+	exceptionsfile string
 }
 
 func NewGitSeekretConfigInit() (*gitSeekretConfig) {
@@ -18,6 +19,7 @@ func NewGitSeekretConfigInit() (*gitSeekretConfig) {
 		version: 1,
 		rulespath: seekret.DefaultRulesPath(),
 		rulesenabled: "",
+		exceptionsfile: "",
 	}
 	return gsc
 }
@@ -42,10 +44,17 @@ func NewGitSeekretConfigLoad(gitConfig *git.Config) (*gitSeekretConfig,error) {
 		return nil,err
 	}
 
+	exceptionsfile, err := gitConfig.LookupString("gitseekret.exceptionsfile")
+	if err != nil {
+		return nil,err
+	}
+
+
 	gsc := &gitSeekretConfig{
 		version: version,
 		rulespath: rulespath,
 		rulesenabled: rulesenabled,
+		exceptionsfile: exceptionsfile,
 	}
 
 	return gsc,nil
@@ -72,17 +81,33 @@ func (gsc *gitSeekretConfig)Save(gitConfig *git.Config) (error) {
 		return err
 	}
 
+	err = gitConfig.SetString("gitseekret.exceptionsfile", gsc.exceptionsfile)
+	if err != nil {
+		return err	
+	}
+
 	return nil
 }
 
 func (gsc *gitSeekretConfig)Run(s *seekret.Seekret) (error) {
+	// TODO: Relative path from repo root.
 	err := s.LoadRulesFromPath(gsc.rulespath, false)
 	if err != nil {
 		return err
 	}
+
 	for _,rule := range strings.Split(gsc.rulesenabled, ",") {
 		s.EnableRule(rule)
 	}
+
+	// TODO: Relative path from repo root.
+	if gsc.exceptionsfile != "" {
+		err := s.LoadExceptionsFromFile(gsc.exceptionsfile)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

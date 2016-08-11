@@ -37,8 +37,9 @@ func GitSeekretCheck(c *cli.Context) error {
 
 	gs.seekret.Inspect(4)
 
-	fmt.Printf("Found Secrets:\n")
-	for _,s := range gs.seekret.ListSecrets() {
+	listSecrets := gs.seekret.ListSecrets()
+	fmt.Printf("Found Secrets: %d\n", len(listSecrets))
+	for _,s := range listSecrets {
 		fmt.Printf("\t%s:%d\n", s.Object.Name, s.Nline)
 		fmt.Printf("\t\t- Metadata:\n")
 		for k,v := range s.Object.Metadata {

@@ -19,10 +19,18 @@ type gitSeekret struct {
 
 
 func NewGitSeekret(configLevel git.ConfigLevel, repo string) (*gitSeekret, error) {
+	var err error 
+
 	gs := &gitSeekret{
 		configLevel: configLevel,
-		repo: repo,
 	}
+
+	gs.repo, err = repoBasePath(repo)
+	if err != nil {
+		return nil,err
+	}
+
+	fmt.Println(gs)
 
 	return gs,nil
 }
@@ -37,7 +45,6 @@ func (gs *gitSeekret)InitConfig() (error) {
 		return err
 	}
 	defer gs.gitConfig.Free()
-
 	gs.gitSeekretConfig = NewGitSeekretConfigInit()
 
 	err = gs.gitSeekretConfig.Run(gs.seekret)
@@ -93,6 +100,16 @@ func (gs *gitSeekret)SaveConfig() (error) {
 }
 
 
+func (gs *gitSeekret)EnableRule(name string) (error) {
+	return gs.seekret.EnableRule(name)
+}
+
+
+func (gs *gitSeekret)DisableRule(name string) (error) {
+	return gs.seekret.DisableRule(name) 
+}
+
+
 func openGitConfig(configLevel git.ConfigLevel, repo string) (*git.Config, error) {
 	var gitConfig *git.Config
 	var err error
@@ -130,10 +147,15 @@ func openGitConfig(configLevel git.ConfigLevel, repo string) (*git.Config, error
 }
 
 
-func (gs *gitSeekret)EnableRule(name string) (error) {
-	return gs.seekret.EnableRule(name)
-}
+func repoBasePath(repo string) (string, error) {
+	r, err := git.OpenRepositoryExtended(repo, git.RepositoryOpenCrossFs, "")
+	if err != nil {
+		return "", err
+	}
 
-func (gs *gitSeekret)DisableRule(name string) (error) {
-	return gs.seekret.DisableRule(name) 
+	path := r.Path()
+
+	r.Free()
+
+	return path,nil
 }
