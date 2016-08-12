@@ -4,7 +4,7 @@
 git-seekret
 ===========
 
-Git module to prevent from commiting sensitive information into the repository.
+Git module to prevent from committing sensitive information into the repository.
 
 Description
 ===========
@@ -18,7 +18,9 @@ included into a commit.
 Installing git-seekret
 ======================
 
-``git-sekret``can be directly insyalled by using go get.
+``git-seekret`` can be directly insyalled by using go get.
+
+::
 
 	go get github.com/apuigsech/git-seekret
 
@@ -109,14 +111,14 @@ The repository seekret-secrets is prepare to test ``git-seekret`, and can be use
 			  password = 'thisISnotSECRET'
 
 		... 
-	
+
 	$ git seekret check -s     # Check on staged files.
 	Found Secrets: 0
-	
+
 	$ echo "password = 'this is super secret'" > new_file
-	
+
 	$ git add new_file
-	
+
 	$ git seekret check -s
 	Found Secrets: 1
 		new_file:1

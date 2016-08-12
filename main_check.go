@@ -35,7 +35,7 @@ func GitSeekretCheck(c *cli.Context) error {
 		return err
 	}
 
-	gs.seekret.Inspect(4)
+	gs.seekret.Inspect(runtime.NumCPU())
 
 	listSecrets := gs.seekret.ListSecrets()
 	fmt.Printf("Found Secrets: %d\n", len(listSecrets))
