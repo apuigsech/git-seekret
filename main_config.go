@@ -9,12 +9,14 @@ import (
 
 func GitSeekretConfig(c *cli.Context) error {
 	if c.Bool("init") {
-		err := gs.InitConfig()
+		// TODO: Implement also support for --global
+		err := gs.InitConfig(git.ConfigLevelLocal)
 		if err != nil {
 			return err
 		}
 	} else {
-		err := gs.LoadConfig(false)
+		// TODO: Implement also support for --global
+		err := gs.LoadConfig(git.ConfigLevelLocal, false)
 		if git.IsErrorClass(err, git.ErrClassConfig) {
 			return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
 		}
@@ -34,20 +36,20 @@ func GitSeekretConfig(c *cli.Context) error {
 			fmt.Println("Value:", value)
 		}
 
-		err := setConfig(gs.gitSeekretConfig, key, value)
+		err := setConfig(gs.config, key, value)
 		if  err != nil {
 			return err
 		}
 	}
 
-	gs.gitSeekretConfig.Save(gs.gitConfig)
+	gs.SaveConfig()
 
-	showConfig(gs.gitSeekretConfig)
+	showConfig(gs.config)
 
 	return nil
 }
 
-func setConfig(gsc *gitSeekretConfig, key string, value interface{}) (error) {
+func setConfig(config *gitSeekretConfig, key string, value interface{}) (error) {
 	switch key {
 		case "version":
 			return fmt.Errorf("not suported")
@@ -56,7 +58,7 @@ func setConfig(gsc *gitSeekretConfig, key string, value interface{}) (error) {
 			if !ok {
 				return fmt.Errorf("invalid format")
 			}
-			gsc.rulespath = rulespath
+			config.rulespath = rulespath
 		case "rulesenabled":
 			return fmt.Errorf("not suported - change enabled rules using 'git-seekret rules'")
 		case "exceptionsfile":
@@ -64,15 +66,15 @@ func setConfig(gsc *gitSeekretConfig, key string, value interface{}) (error) {
 			if !ok {
 				return fmt.Errorf("invalid format")
 			}
-			gsc.exceptionsfile = exceptionsfile		
+			config.exceptionsfile = exceptionsfile		
 	}
 	return nil
 }
 
-func showConfig(gitSeekretConfig *gitSeekretConfig) {
+func showConfig(config *gitSeekretConfig) {
 	fmt.Printf("Config:\n")
-	fmt.Printf("\tversion = %d\n", gitSeekretConfig.version)
-	fmt.Printf("\trulespath = %s\n", gitSeekretConfig.rulespath)
-	fmt.Printf("\trulesenabled = %s\n", gitSeekretConfig.rulesenabled)
-	fmt.Printf("\texceptionsfile = %s\n", gitSeekretConfig.exceptionsfile)
+	fmt.Printf("\tversion = %d\n", config.version)
+	fmt.Printf("\trulespath = %s\n", config.rulespath)
+	fmt.Printf("\trulesenabled = %s\n", config.rulesenabled)
+	fmt.Printf("\texceptionsfile = %s\n", config.exceptionsfile)
 }

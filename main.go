@@ -125,7 +125,9 @@ func gitSeekretBefore(c *cli.Context) error {
 		configLevel = git.ConfigLevelLocal
 	}
 
-	gs,err = NewGitSeekret(configLevel, ".")
+	_ = configLevel
+
+	gs,err = NewGitSeekret(".")
 	if err != nil {
 		log.Panic(err)
 	}
