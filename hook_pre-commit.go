@@ -3,35 +3,24 @@ package main
 import (
 	"fmt"
 	"runtime"
-	"github.com/urfave/cli"
-	"github.com/libgit2/git2go"
 	seekret "github.com/apuigsech/seekret/lib"
 )
 
-func GitSeekretCheck(c *cli.Context) error {
-	err := gs.LoadConfig(true)
-	if git.IsErrorClass(err, git.ErrClassConfig) {
-		return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
-	}
-	if err != nil {
-		return err
-	}	
+func HookPreCommitEnable(args []string) (string,error) {
+	return "git seekret hook --run pre-commit\n",nil
+}
 
+func HookPreCommitDisable(args []string) (error) {	
+	return nil
+}
+
+func HookPreCommitRun(args []string) (error) {
 	options := map[string]interface{}{
 		"commit": false,
-		"staged": false,
+		"staged": true,
 	}
 
-	if c.IsSet("commit") {
-		options["commit"] = true
-		options["commitcount"] = c.Int("commit")
-	}
-
-	if c.IsSet("staged") {
-		options["staged"] = true
-	}
-
-	err = gs.seekret.LoadObjects(seekret.SourceTypeGit, ".", options)
+	err := gs.seekret.LoadObjects(seekret.SourceTypeGit, ".", options)
 	if err != nil {
 		return err
 	}
@@ -51,6 +40,9 @@ func GitSeekretCheck(c *cli.Context) error {
 		fmt.Printf("\t\t- Content:\n\t\t  %s\n", s.Line)
 	}
 
+	if len(listSecrets) > 0 {
+		return fmt.Errorf("commit cannot proceed")
+	}
+
 	return nil
 }
-

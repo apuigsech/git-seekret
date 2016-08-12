@@ -76,6 +76,36 @@ func main() {
 				},
 			},
 		},
+		{
+			Name: "hook",
+			Usage: "TBD",
+			Action:   GitSeekretHook,
+			Flags: 	[]cli.Flag {
+				cli.StringFlag{
+					Name:  "run, r",
+					Usage: "TBD",
+					Value: "",
+				},				
+				cli.StringFlag{
+					Name:  "enable, e",
+					Usage: "TBD",
+					Value: "",
+				},
+				cli.StringFlag{
+					Name:  "disable, d",
+					Usage: "TBD",
+					Value: "",
+				},
+				cli.BoolFlag{
+					Name:  "enable-all",
+					Usage: "TBD",
+				},
+				cli.BoolFlag{
+					Name:  "disable-all",
+					Usage: "TBD",
+				},
+			},	
+		},
 	}
 
 	app.Before = gitSeekretBefore
