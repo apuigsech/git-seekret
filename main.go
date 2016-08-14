@@ -29,50 +29,50 @@ func main() {
 	app.Commands = []cli.Command{
 		{
 			Name:	"config",
-			Usage:  "TBD",
+			Usage:  "manage configuration seetings",
 			Action:   GitSeekretConfig,
 			Flags: 	[]cli.Flag {
 				cli.BoolFlag{
 					Name: "init",
-					Usage: "TBD",
+					Usage: "initialize configuration with default values",
 				},
 				cli.StringFlag{
 					Name:  "set, s",
-					Usage: "TBD",
+					Usage: "set value for specific setting",
 					Value: "",
 				},
 			},
 		},
 		{
 			Name: "rules",
-			Usage: "Manage rules",
+			Usage: "manage rules",
 			Action: GitSeekretRules,
 			Flags: 	[]cli.Flag {
 				cli.StringFlag{
 					Name:  "enable, e",
-					Usage: "TBD",
+					Usage: "enable rules",
 					Value: "",
 				},
 				cli.StringFlag{
 					Name:  "disable, d",
-					Usage: "TBD",
+					Usage: "disable rule",
 					Value: "",
 				},
 			},	
 		},
 		{
 			Name:     "check",
-			Usage:    "TBD",
+			Usage:    "inspect git repository",
 			Action:   GitSeekretCheck,
 			Flags: 	[]cli.Flag {
 				cli.IntFlag{
 					Name:  "commit, c",
-					Usage: "inspect commited files. Argument is the number of commits to inspect (0 = all)",
+					Usage: "include commited files. Argument is the number of commits to inspect (0 = all)",
 					Value: 0,
 				},
 				cli.BoolFlag{
 					Name:  "staged, s",
-					Usage: "inspect staged files",
+					Usage: "include staged files",
 				},
 			},
 		},
