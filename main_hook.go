@@ -114,6 +114,12 @@ func GitSeekretHookEnable(name string) (error) {
 
 	fh.WriteString("#!/usr/bin/env bash\n\n")
 	fh.WriteString(script)
+	fh.Close()
+
+	err = os.Chmod(hookfile, 0755)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
