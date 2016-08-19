@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"runtime"
-	seekret "github.com/apuigsech/seekret/lib"
+	"github.com/apuigsech/seekret-source-git"
 )
 
 func HookPreCommitEnable(args []string) (string,error) {
@@ -20,7 +20,7 @@ func HookPreCommitRun(args []string) (error) {
 		"staged": true,
 	}
 
-	err := gs.seekret.LoadObjects(seekret.SourceTypeGit, ".", options)
+	err := gs.seekret.LoadObjects(sourcegit.SourceTypeGit, ".", options)
 	if err != nil {
 		return err
 	}

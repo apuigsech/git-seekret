@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"github.com/libgit2/git2go"
 	"strings"
-	seekret "github.com/apuigsech/seekret/lib"
+	"github.com/apuigsech/seekret"
+	"github.com/apuigsech/seekret/models"
 )
 
 type gitSeekretConfig struct {
@@ -178,7 +179,7 @@ func openGitConfig(configLevel git.ConfigLevel, repo string) (*git.Config, error
 }
 
 
-func buildRulesEnabledString(listRules []seekret.Rule) string {
+func buildRulesEnabledString(listRules []models.Rule) string {
 	rulesenabled := make([]string, 0, len(listRules))
 	for _,rule := range listRules {
 		if rule.Enabled {

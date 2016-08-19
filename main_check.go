@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"github.com/urfave/cli"
 	"github.com/libgit2/git2go"
-	seekret "github.com/apuigsech/seekret/lib"
+	"github.com/apuigsech/seekret-source-git"
 )
 
 func GitSeekretCheck(c *cli.Context) error {
@@ -32,7 +32,7 @@ func GitSeekretCheck(c *cli.Context) error {
 		options["staged"] = true
 	}
 
-	err = gs.seekret.LoadObjects(seekret.SourceTypeGit, ".", options)
+	err = gs.seekret.LoadObjects(sourcegit.SourceTypeGit, ".", options)
 	if err != nil {
 		return err
 	}

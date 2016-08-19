@@ -1,7 +1,7 @@
 package main
 
 import (
-	seekret "github.com/apuigsech/seekret/lib"
+	"github.com/apuigsech/seekret"
 	"github.com/libgit2/git2go"
 )
 
