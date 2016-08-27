@@ -32,13 +32,13 @@ func NewGitSeekret(repo string) (*gitSeekret, error) {
 
 
 
-func (gs *gitSeekret)EnableRule(name string) (error) {
-	return gs.seekret.EnableRule(name)
+func (gs *gitSeekret)EnableRule(name string) int {
+	return gs.seekret.EnableRuleByRegexp(name)
 }
 
 
-func (gs *gitSeekret)DisableRule(name string) (error) {
-	return gs.seekret.DisableRule(name) 
+func (gs *gitSeekret)DisableRule(name string) int {
+	return gs.seekret.DisableRuleByRegexp(name)
 }
 
 

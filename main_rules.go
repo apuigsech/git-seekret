@@ -20,17 +20,11 @@ func GitSeekretRules(c *cli.Context) error {
 	disable := c.String("disable")
 
 	if enable != "" {
-		err := gs.EnableRule(enable)
-		if err != nil {
-			return err
-		}
+		gs.EnableRule(enable)
 	}
 
 	if disable != "" {
-		err := gs.DisableRule(disable)
-		if err != nil {
-			return err
-		}
+		gs.DisableRule(disable)
 	}
 
 	fmt.Println("List of rules:")
