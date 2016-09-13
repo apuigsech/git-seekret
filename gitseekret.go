@@ -54,17 +54,3 @@ func repoBasePath(repo string) (string, error) {
 
 	return path,nil
 }
-
-
-/*
-func main() {
-	gs,err := NewGitSeekret(".")
-	if err != nil {
-		fmt.Println(err)
-	}
-	gs.LoadConfig(git.ConfigLevelLocal, true)
-	fmt.Printf("%#v\n", gs)
-	fmt.Printf("%#v\n", gs.config)
-	fmt.Printf("%#v\n", gs.seekret.ListRules())
-}
-*/

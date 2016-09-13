@@ -34,7 +34,36 @@ It's important to have the following tools and libraries to make it work properl
 Usage
 =====
 
-TBD
+::
+
+	General Options:
+
+	NAME:
+	   git-seekret - prevent from committing sensitive information into git repository
+
+	USAGE:
+	   git-seekret [global options] command [command options] [arguments...]
+
+	VERSION:
+	   0.0.1
+
+	AUTHOR(S):
+	   Albert Puigsech Galicia <albert@puigsech.com>
+
+	COMMANDS:
+	     config   manage configuration seetings
+	     rules    manage rules
+	     check    inspect git repository
+	     hook     manage git hooks
+	     help, h  Shows a list of commands or help for one command
+
+	GLOBAL OPTIONS:
+	   --global
+	   --help, -h     show help
+	   --version, -v  print the version
+
+
+``--global``
 
 
 Rules and Exceptions

@@ -14,7 +14,7 @@ func main() {
 
 	app.Name = "git-seekret"
 	app.Version = "0.0.1"
-	app.Usage = "TBD"
+	app.Usage = "prevent from committing sensitive information into git repository"
 
 	app.Author = "Albert Puigsech Galicia"
 	app.Email = "albert@puigsech.com"
@@ -78,7 +78,7 @@ func main() {
 		},
 		{
 			Name: "hook",
-			Usage: "TBD",
+			Usage: "manage git hooks",
 			Action:   GitSeekretHook,
 			Flags: 	[]cli.Flag {
 				cli.StringFlag{
