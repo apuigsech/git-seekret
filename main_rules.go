@@ -1,9 +1,9 @@
 package main
 
-import(
+import (
 	"fmt"
-	"github.com/urfave/cli"
 	"github.com/libgit2/git2go"
+	"github.com/urfave/cli"
 )
 
 func GitSeekretRules(c *cli.Context) error {
@@ -14,7 +14,7 @@ func GitSeekretRules(c *cli.Context) error {
 	}
 	if err != nil {
 		return err
-	}	
+	}
 
 	enable := c.String("enable")
 	disable := c.String("disable")
@@ -37,6 +37,6 @@ func GitSeekretRules(c *cli.Context) error {
 	}
 
 	gs.SaveConfig()
-	
+
 	return nil
 }

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
 	"github.com/libgit2/git2go"
 	"github.com/urfave/cli"
+	"log"
 	"os"
 )
 
@@ -28,12 +28,12 @@ func main() {
 	}
 	app.Commands = []cli.Command{
 		{
-			Name:	"config",
+			Name:   "config",
 			Usage:  "manage configuration seetings",
-			Action:   GitSeekretConfig,
-			Flags: 	[]cli.Flag {
+			Action: GitSeekretConfig,
+			Flags: []cli.Flag{
 				cli.BoolFlag{
-					Name: "init",
+					Name:  "init",
 					Usage: "initialize configuration with default values",
 				},
 				cli.StringFlag{
@@ -44,10 +44,10 @@ func main() {
 			},
 		},
 		{
-			Name: "rules",
-			Usage: "manage rules",
+			Name:   "rules",
+			Usage:  "manage rules",
 			Action: GitSeekretRules,
-			Flags: 	[]cli.Flag {
+			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "enable, e",
 					Usage: "enable rules",
@@ -58,13 +58,13 @@ func main() {
 					Usage: "disable rule",
 					Value: "",
 				},
-			},	
+			},
 		},
 		{
-			Name:     "check",
-			Usage:    "inspect git repository",
-			Action:   GitSeekretCheck,
-			Flags: 	[]cli.Flag {
+			Name:   "check",
+			Usage:  "inspect git repository",
+			Action: GitSeekretCheck,
+			Flags: []cli.Flag{
 				cli.IntFlag{
 					Name:  "commit, c",
 					Usage: "include commited files. Argument is the number of commits to inspect (0 = all)",
@@ -77,15 +77,15 @@ func main() {
 			},
 		},
 		{
-			Name: "hook",
-			Usage: "manage git hooks",
-			Action:   GitSeekretHook,
-			Flags: 	[]cli.Flag {
+			Name:   "hook",
+			Usage:  "manage git hooks",
+			Action: GitSeekretHook,
+			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "run, r",
 					Usage: "TBD",
 					Value: "",
-				},				
+				},
 				cli.StringFlag{
 					Name:  "enable, e",
 					Usage: "TBD",
@@ -104,7 +104,7 @@ func main() {
 					Name:  "disable-all",
 					Usage: "TBD",
 				},
-			},	
+			},
 		},
 	}
 
@@ -113,7 +113,6 @@ func main() {
 
 	app.Run(os.Args)
 }
-
 
 func gitSeekretBefore(c *cli.Context) error {
 	var configLevel git.ConfigLevel
@@ -127,14 +126,13 @@ func gitSeekretBefore(c *cli.Context) error {
 
 	_ = configLevel
 
-	gs,err = NewGitSeekret(".")
+	gs, err = NewGitSeekret(".")
 	if err != nil {
 		log.Panic(err)
 	}
 
 	return nil
 }
-
 
 func gitSeekretAfter(c *cli.Context) error {
 	return nil

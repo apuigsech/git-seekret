@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/libgit2/git2go"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/libgit2/git2go"
 )
 
 func GitSeekretConfig(c *cli.Context) error {
@@ -37,7 +37,7 @@ func GitSeekretConfig(c *cli.Context) error {
 		}
 
 		err := setConfig(gs.config, key, value)
-		if  err != nil {
+		if err != nil {
 			return err
 		}
 	}
@@ -49,24 +49,24 @@ func GitSeekretConfig(c *cli.Context) error {
 	return nil
 }
 
-func setConfig(config *gitSeekretConfig, key string, value interface{}) (error) {
+func setConfig(config *gitSeekretConfig, key string, value interface{}) error {
 	switch key {
-		case "version":
-			return fmt.Errorf("not suported")
-		case "rulespath":
-			rulespath, ok := value.(string)
-			if !ok {
-				return fmt.Errorf("invalid format")
-			}
-			config.rulespath = rulespath
-		case "rulesenabled":
-			return fmt.Errorf("not suported - change enabled rules using 'git-seekret rules'")
-		case "exceptionsfile":
-			exceptionsfile, ok := value.(string)
-			if !ok {
-				return fmt.Errorf("invalid format")
-			}
-			config.exceptionsfile = exceptionsfile		
+	case "version":
+		return fmt.Errorf("not suported")
+	case "rulespath":
+		rulespath, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("invalid format")
+		}
+		config.rulespath = rulespath
+	case "rulesenabled":
+		return fmt.Errorf("not suported - change enabled rules using 'git-seekret rules'")
+	case "exceptionsfile":
+		exceptionsfile, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("invalid format")
+		}
+		config.exceptionsfile = exceptionsfile
 	}
 	return nil
 }
