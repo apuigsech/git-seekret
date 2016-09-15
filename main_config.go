@@ -9,14 +9,12 @@ import (
 
 func GitSeekretConfig(c *cli.Context) error {
 	if c.Bool("init") {
-		// TODO: Implement also support for --global
-		err := gs.InitConfig(git.ConfigLevelLocal)
+		err := gs.InitConfig()
 		if err != nil {
 			return err
 		}
 	} else {
-		// TODO: Implement also support for --global
-		err := gs.LoadConfig(git.ConfigLevelLocal, false)
+		err := gs.LoadConfig(false)
 		if git.IsErrorClass(err, git.ErrClassConfig) {
 			return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
 		}

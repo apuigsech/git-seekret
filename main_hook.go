@@ -22,8 +22,7 @@ var listGitSeekretHookHandler map[string]GitSeekretHookHandler = map[string]GitS
 }
 
 func GitSeekretHook(c *cli.Context) error {
-	// TODO: Implement also support for --global
-	err := gs.LoadConfig(git.ConfigLevelLocal, true)
+	err := gs.LoadConfig(true)
 	if git.IsErrorClass(err, git.ErrClassConfig) {
 		return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
 	}

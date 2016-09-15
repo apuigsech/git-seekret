@@ -20,7 +20,7 @@ func HookPreCommitRun(args []string) error {
 		"staged": true,
 	}
 
-	err := gs.seekret.LoadObjects(sourcegit.SourceTypeGit, ".", options)
+	err := gs.seekret.LoadObjects(sourcegit.SourceTypeGit, gs.repo, options)
 	if err != nil {
 		return err
 	}

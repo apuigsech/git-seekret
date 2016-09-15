@@ -5,6 +5,7 @@ import (
 	"github.com/urfave/cli"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 var gs *gitSeekret
@@ -117,6 +118,7 @@ func main() {
 func gitSeekretBefore(c *cli.Context) error {
 	var configLevel git.ConfigLevel
 	var err error
+	var repoPath string
 
 	if c.Bool("global") {
 		configLevel = git.ConfigLevelGlobal
@@ -124,9 +126,12 @@ func gitSeekretBefore(c *cli.Context) error {
 		configLevel = git.ConfigLevelLocal
 	}
 
-	_ = configLevel
+	repoPath, err = filepath.Abs(".")
+	if err != nil {
+		log.Panic(err)
+	}
 
-	gs, err = NewGitSeekret(".")
+	gs, err = NewGitSeekret(repoPath, configLevel)
 	if err != nil {
 		log.Panic(err)
 	}

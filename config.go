@@ -1,33 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"github.com/apuigsech/seekret"
 	"github.com/apuigsech/seekret/models"
 	"github.com/libgit2/git2go"
+	"path/filepath"
 	"strings"
 )
 
 type gitSeekretConfig struct {
-	configLevel git.ConfigLevel
-	gitConfig   *git.Config
-
 	version        int32
 	rulespath      string
 	rulesenabled   string
 	exceptionsfile string
 }
 
-func (gs *gitSeekret) InitConfig(configLevel git.ConfigLevel) error {
-	gitConfig, err := openGitConfig(configLevel, gs.repo)
+func (gs *gitSeekret) InitConfig() error {
+	gitConfig, err := openGitConfig(gs.configLevel, gs.repo)
 	if err != nil {
 		return err
 	}
 	defer gitConfig.Free()
 
 	gs.config = &gitSeekretConfig{
-		configLevel:    configLevel,
-		gitConfig:      gitConfig,
 		version:        1,
 		rulespath:      seekret.DefaultRulesPath(),
 		rulesenabled:   "",
@@ -42,8 +37,8 @@ func (gs *gitSeekret) InitConfig(configLevel git.ConfigLevel) error {
 	return nil
 }
 
-func (gs *gitSeekret) LoadConfig(configLevel git.ConfigLevel, run bool) error {
-	gitConfig, err := openGitConfig(configLevel, gs.repo)
+func (gs *gitSeekret) LoadConfig(run bool) error {
+	gitConfig, err := openGitConfig(gs.configLevel, gs.repo)
 	if err != nil {
 		return err
 	}
@@ -70,8 +65,6 @@ func (gs *gitSeekret) LoadConfig(configLevel git.ConfigLevel, run bool) error {
 	}
 
 	gs.config = &gitSeekretConfig{
-		configLevel:    configLevel,
-		gitConfig:      gitConfig,
 		version:        version,
 		rulespath:      rulespath,
 		rulesenabled:   rulesenabled,
@@ -89,26 +82,28 @@ func (gs *gitSeekret) LoadConfig(configLevel git.ConfigLevel, run bool) error {
 }
 
 func (gs *gitSeekret) SaveConfig() error {
-	if gs.config.gitConfig == nil {
-		return fmt.Errorf("git config not loaded")
+	gitConfig, err := openGitConfig(gs.configLevel, gs.repo)
+	if err != nil {
+		return err
 	}
+	defer gitConfig.Free()
 
-	err := gs.config.gitConfig.SetInt32("gitseekret.version", gs.config.version)
+	err = gitConfig.SetInt32("gitseekret.version", gs.config.version)
 	if err != nil {
 		return err
 	}
 
-	err = gs.config.gitConfig.SetString("gitseekret.rulespath", gs.config.rulespath)
+	err = gitConfig.SetString("gitseekret.rulespath", gs.config.rulespath)
 	if err != nil {
 		return err
 	}
 
-	err = gs.config.gitConfig.SetString("gitseekret.rulesenabled", buildRulesEnabledString(gs.seekret.ListRules()))
+	err = gitConfig.SetString("gitseekret.rulesenabled", buildRulesEnabledString(gs.seekret.ListRules()))
 	if err != nil {
 		return err
 	}
 
-	err = gs.config.gitConfig.SetString("gitseekret.exceptionsfile", gs.config.exceptionsfile)
+	err = gitConfig.SetString("gitseekret.exceptionsfile", gs.config.exceptionsfile)
 	if err != nil {
 		return err
 	}
@@ -162,6 +157,14 @@ func openGitConfig(configLevel git.ConfigLevel, repo string) (*git.Config, error
 		case git.ConfigLevelXDG:
 			configFile, err = git.ConfigFindXDG()
 		}
+		if err != nil {
+			return nil, err
+		}
+		configFile, err = filepath.EvalSymlinks(configFile)
+		if err != nil {
+			return nil, err
+		}
+		configFile, err = filepath.Abs(configFile)
 		if err != nil {
 			return nil, err
 		}

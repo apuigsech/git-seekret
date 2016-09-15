@@ -9,8 +9,7 @@ import (
 )
 
 func GitSeekretCheck(c *cli.Context) error {
-	// TODO: Implement also support for --global
-	err := gs.LoadConfig(git.ConfigLevelLocal, true)
+	err := gs.LoadConfig(true)
 	if git.IsErrorClass(err, git.ErrClassConfig) {
 		return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
 	}
@@ -32,7 +31,7 @@ func GitSeekretCheck(c *cli.Context) error {
 		options["staged"] = true
 	}
 
-	err = gs.seekret.LoadObjects(sourcegit.SourceTypeGit, ".", options)
+	err = gs.seekret.LoadObjects(sourcegit.SourceTypeGit, gs.repo, options)
 	if err != nil {
 		return err
 	}
