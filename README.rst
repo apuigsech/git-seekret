@@ -18,18 +18,22 @@ included into a commit.
 Installing git-seekret
 ======================
 
-``git-seekret`` can be directly insyalled by using go get.
-
-::
-
-	go get github.com/apuigsech/git-seekret
-
 It's important to have the following tools and libraries to make it work properly:
 
+	* glide
 	* pkg-config
 	* golang >= 1.6
 	* libgit >= 2.24
 
+
+``git-seekret`` uses ``Glide`` to maintain its dependencies.
+
+Follow the instructions for installing Glide: https://github.com/Masterminds/glide#install
+
+::
+
+	glide install
+	go build
 
 Usage
 =====

@@ -1,0 +1,20 @@
+hash: fff9f76b302f500e6a9030278cb766346f89016e3e43bfa5e56a9b6a11900fd8
+updated: 2016-09-19T08:10:49.566887858-04:00
+imports:
+- name: github.com/apuigsech/seekret
+  version: 32d88c555921f47513d77b213c78d1df9557421d
+  subpackages:
+  - models
+- name: github.com/apuigsech/seekret-source-git
+  version: 72b9aa82642fd33662b2d30f3cf8dd9aac294474
+- name: github.com/codahale/blake2
+  version: 8d10d0420cbfbdc9c1164c0c4ad3457a6c3771b9
+- name: github.com/jasonmoo/ssh_config
+  version: 6438268c50892ed87bbf8667a915a0cf187bec7c
+- name: github.com/libgit2/git2go
+  version: 241aa34d83b210ceaab7029c46e05794f2ea9797
+- name: github.com/urfave/cli
+  version: d53eb991652b1d438abdd34ce4bfa3ef1539108e
+- name: gopkg.in/yaml.v2
+  version: 31c299268d302dd0aa9a0dcf765a3d58971ac83f
+testImports: []
