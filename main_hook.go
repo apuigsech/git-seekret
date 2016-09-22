@@ -2,35 +2,33 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"github.com/libgit2/git2go"
 	"github.com/urfave/cli"
+	"os"
 )
 
 type GitSeekretHookHandler struct {
-	Enable func(args []string) (string, error)
-	Disable func(args []string) (error)
-	Run func(args []string) (error)
+	Enable  func(args []string) (string, error)
+	Disable func(args []string) error
+	Run     func(args []string) error
 }
 
 var listGitSeekretHookHandler map[string]GitSeekretHookHandler = map[string]GitSeekretHookHandler{
 	"pre-commit": GitSeekretHookHandler{
-		Enable: HookPreCommitEnable,
+		Enable:  HookPreCommitEnable,
 		Disable: HookPreCommitDisable,
-		Run: HookPreCommitRun,
+		Run:     HookPreCommitRun,
 	},
 }
 
-
 func GitSeekretHook(c *cli.Context) error {
-	// TODO: Implement also support for --global
-	err := gs.LoadConfig(git.ConfigLevelLocal, true)	
+	err := gs.LoadConfig(true)
 	if git.IsErrorClass(err, git.ErrClassConfig) {
 		return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
 	}
 	if err != nil {
 		return err
-	}	
+	}
 
 	enable := c.String("enable")
 	disable := c.String("disable")
@@ -50,7 +48,7 @@ func GitSeekretHook(c *cli.Context) error {
 	}
 
 	if c.Bool("enable-all") {
-		for name,_ := range listGitSeekretHookHandler {
+		for name, _ := range listGitSeekretHookHandler {
 			err := GitSeekretHookEnable(name)
 			if err != nil {
 				return err
@@ -59,13 +57,13 @@ func GitSeekretHook(c *cli.Context) error {
 	}
 
 	if c.Bool("disable-all") {
-		for name,_ := range listGitSeekretHookHandler {
+		for name, _ := range listGitSeekretHookHandler {
 			err := GitSeekretHookDisable(name)
 			if err != nil {
 				return err
 			}
 		}
-	}	
+	}
 
 	run := c.String("run")
 
@@ -76,19 +74,19 @@ func GitSeekretHook(c *cli.Context) error {
 			if err != nil {
 				return err
 			}
-		}		
+		}
 	}
 
 	return nil
 }
 
-func GitSeekretHookEnable(name string) (error) {
+func GitSeekretHookEnable(name string) error {
 	var script string
 	var err error
 
 	handler, ok := listGitSeekretHookHandler[name]
 	if ok && handler.Enable != nil {
-		script,err = handler.Enable(nil)
+		script, err = handler.Enable(nil)
 		if err != nil {
 			return err
 		}
@@ -124,7 +122,7 @@ func GitSeekretHookEnable(name string) (error) {
 	return nil
 }
 
-func GitSeekretHookDisable(name string) (error) {
+func GitSeekretHookDisable(name string) error {
 	handler, ok := listGitSeekretHookHandler[name]
 	if ok && handler.Disable != nil {
 		err := handler.Disable(nil)
@@ -142,4 +140,3 @@ func GitSeekretHookDisable(name string) (error) {
 
 	return nil
 }
-

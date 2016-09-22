@@ -2,21 +2,19 @@ package main
 
 import (
 	"fmt"
+	"github.com/libgit2/git2go"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/libgit2/git2go"
 )
 
 func GitSeekretConfig(c *cli.Context) error {
 	if c.Bool("init") {
-		// TODO: Implement also support for --global
-		err := gs.InitConfig(git.ConfigLevelLocal)
+		err := gs.InitConfig()
 		if err != nil {
 			return err
 		}
 	} else {
-		// TODO: Implement also support for --global
-		err := gs.LoadConfig(git.ConfigLevelLocal, false)
+		err := gs.LoadConfig(false)
 		if git.IsErrorClass(err, git.ErrClassConfig) {
 			return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
 		}
@@ -37,7 +35,7 @@ func GitSeekretConfig(c *cli.Context) error {
 		}
 
 		err := setConfig(gs.config, key, value)
-		if  err != nil {
+		if err != nil {
 			return err
 		}
 	}
@@ -49,24 +47,24 @@ func GitSeekretConfig(c *cli.Context) error {
 	return nil
 }
 
-func setConfig(config *gitSeekretConfig, key string, value interface{}) (error) {
+func setConfig(config *gitSeekretConfig, key string, value interface{}) error {
 	switch key {
-		case "version":
-			return fmt.Errorf("not suported")
-		case "rulespath":
-			rulespath, ok := value.(string)
-			if !ok {
-				return fmt.Errorf("invalid format")
-			}
-			config.rulespath = rulespath
-		case "rulesenabled":
-			return fmt.Errorf("not suported - change enabled rules using 'git-seekret rules'")
-		case "exceptionsfile":
-			exceptionsfile, ok := value.(string)
-			if !ok {
-				return fmt.Errorf("invalid format")
-			}
-			config.exceptionsfile = exceptionsfile		
+	case "version":
+		return fmt.Errorf("not suported")
+	case "rulespath":
+		rulespath, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("invalid format")
+		}
+		config.rulespath = rulespath
+	case "rulesenabled":
+		return fmt.Errorf("not suported - change enabled rules using 'git-seekret rules'")
+	case "exceptionsfile":
+		exceptionsfile, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("invalid format")
+		}
+		config.exceptionsfile = exceptionsfile
 	}
 	return nil
 }

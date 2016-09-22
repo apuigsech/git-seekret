@@ -8,39 +8,36 @@ import (
 const gitSeekretConfigVersion = 1
 
 type gitSeekret struct {
-	repo string
-	seekret *seekret.Seekret
-	config *gitSeekretConfig
+	repo        string
+	configLevel git.ConfigLevel
+	seekret     *seekret.Seekret
+	config      *gitSeekretConfig
 }
 
-
-func NewGitSeekret(repo string) (*gitSeekret, error) {
-	var err error 
+func NewGitSeekret(repo string, configLevel git.ConfigLevel) (*gitSeekret, error) {
+	var err error
 
 	repo, err = repoBasePath(repo)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	gs := &gitSeekret{
-		repo: repo,
-		seekret: seekret.NewSeekret(),
+		repo:        repo,
+		configLevel: configLevel,
+		seekret:     seekret.NewSeekret(),
 	}
 
-	return gs,nil
+	return gs, nil
 }
 
-
-
-func (gs *gitSeekret)EnableRule(name string) int {
+func (gs *gitSeekret) EnableRule(name string) int {
 	return gs.seekret.EnableRuleByRegexp(name)
 }
 
-
-func (gs *gitSeekret)DisableRule(name string) int {
+func (gs *gitSeekret) DisableRule(name string) int {
 	return gs.seekret.DisableRuleByRegexp(name)
 }
-
 
 func repoBasePath(repo string) (string, error) {
 	r, err := git.OpenRepositoryExtended(repo, git.RepositoryOpenCrossFs, "")
@@ -52,5 +49,5 @@ func repoBasePath(repo string) (string, error) {
 
 	r.Free()
 
-	return path,nil
+	return path, nil
 }
