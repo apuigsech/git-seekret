@@ -35,6 +35,12 @@ Follow the instructions for installing Glide: https://github.com/Masterminds/gli
 	glide install
 	go build
 
+This builds a binary ``git-seekret``.  To place in standard go installed binaries
+
+::
+
+        go install
+
 Usage
 =====
 
