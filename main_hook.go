@@ -94,7 +94,10 @@ func GitSeekretHookEnable(name string) error {
 
 	_ = script
 
-	hookfile := fmt.Sprintf("%s/hooks/%s", gs.repo, name)
+	hookfile, err := getHookFile(name)
+	if err != nil {
+		return err
+	}
 
 	if _, err := os.Stat(hookfile); err == nil {
 		hookfile_old := fmt.Sprintf("%s/hooks/%s.old", gs.repo, name)
@@ -131,12 +134,33 @@ func GitSeekretHookDisable(name string) error {
 		}
 	}
 
-	hookfile := fmt.Sprintf("%s/hooks/%s", gs.repo, name)
+	hookfile, err := getHookFile(name)
+	if err != nil {
+		return err
+	}
 
-	err := os.Remove(hookfile)
+	err = os.Remove(hookfile)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func getHookFile(name string) (string, error) {
+	hookfile := fmt.Sprintf("%s/hooks/%s", gs.repo, name)
+	if gs.configLevel == git.ConfigLevelGlobal {
+		gitConfig, err := openGitConfig(gs.configLevel, gs.repo)
+		if err != nil {
+			return hookfile, err
+		}
+		defer gitConfig.Free()
+
+		hookspath, err := gitConfig.LookupString("core.hooksPath")
+		if err != nil {
+			return hookfile, err
+		}
+		hookfile = fmt.Sprintf("%s/%s", hookspath, name)
+	}
+	return hookfile, nil
 }
