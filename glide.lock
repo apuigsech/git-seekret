@@ -1,8 +1,8 @@
 hash: fff9f76b302f500e6a9030278cb766346f89016e3e43bfa5e56a9b6a11900fd8
-updated: 2016-09-19T08:10:49.566887858-04:00
+updated: 2016-09-29T10:17:44.837155669-04:00
 imports:
 - name: github.com/apuigsech/seekret
-  version: 32d88c555921f47513d77b213c78d1df9557421d
+  version: 75ab481819b4c1e1794497defea9a9332943295b
   subpackages:
   - models
 - name: github.com/apuigsech/seekret-source-git
