@@ -1,9 +1,12 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"github.com/apuigsech/seekret"
 	"github.com/apuigsech/seekret/models"
 	"github.com/libgit2/git2go"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -29,11 +32,42 @@ func (gs *gitSeekret) InitConfig() error {
 		exceptionsfile: "",
 	}
 
+	err = gs.CheckConfig()
+	if err != nil {
+		return err
+	}
+
 	err = gs.RunConfig()
 	if err != nil {
 		return err
 	}
 
+	return nil
+}
+
+func (gs *gitSeekret) CheckConfig() error {
+	if gs.config == nil {
+		return errors.New("Undefined config file.")
+	}
+	_, err := os.Stat(gs.config.rulespath)
+	if err != nil {
+		// If we are using the default rules path, let the user know that there is a SEEKRET_RULES_PATH env var.
+		// We don't want to tell the user to use the default path and to instead override it with the
+		// SEEKRET_RULES_PATH env var.
+		if gs.config.rulespath == seekret.DefaultRulesPath() || os.Getenv("SEEKRET_RULES_PATH") == "" {
+			return fmt.Errorf("Unable to use default rulespath \"%s\".\nSystem Error: %s\n\nHOW TO FIX:\n"+
+				"Create your own rules folder and set the path of the folder to"+
+				"\"SEEKRET_RULES_PATH\" in your environment to override the default rules path.\n"+
+				"Example command to create folder:\n$ mkdir -p $HOME/.seekret_rules && "+
+				"export $SEEKRET_RULES_PATH=$HOME/.seekret_rules\n"+
+				"Reinitialize your config afterwards.\n", gs.config.rulespath, err.Error())
+		} else {
+			// If something goes really wrong, just return a generic error.
+			return fmt.Errorf("Unable to use rulespath \"%s\". Ensure it exists and you"+
+				"have permission to read from it. Reinitialize your config afterwards.\n"+
+				"System Error: %s\n", gs.config.rulespath, err.Error())
+		}
+	}
 	return nil
 }
 
@@ -72,6 +106,10 @@ func (gs *gitSeekret) LoadConfig(run bool) error {
 	}
 
 	if run {
+		err = gs.CheckConfig()
+		if err != nil {
+			return err
+		}
 		err = gs.RunConfig()
 		if err != nil {
 			return err
