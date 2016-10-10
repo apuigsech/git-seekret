@@ -73,11 +73,12 @@ Usage
 Rules and Exceptions
 ====================
 
-The definition of rules and exceptions for ``git-seekret`` are defined by the seekret go library. A proper documentatio for this library can be found here;
+The definition of rules and exceptions for ``git-seekret`` are defined by the `seekret go library. Proper documentation for this library can be found here:
 
 	https://github.com/apuigsech/seekret
 
-
+Once you download the secrets, you will need to set your ``SEEKRET_RULES_PATH`` environment variable to point to the location of the rules.
+This is needed because by default, the ``seekret`` library will look for the rules in ``$GOPATH/src/github.com/apuigsech/seekret/rules``.
 
 
 Hands-On
