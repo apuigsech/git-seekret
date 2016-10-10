@@ -59,6 +59,14 @@ func main() {
 					Usage: "disable rule",
 					Value: "",
 				},
+				cli.BoolFlag{
+					Name:  "enable-all",
+					Usage: "enable all rules",
+				},
+				cli.BoolFlag{
+					Name:  "disable-all",
+					Usage: "disable all rules",
+				},
 			},
 		},
 		{

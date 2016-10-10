@@ -18,11 +18,29 @@ func GitSeekretRules(c *cli.Context) error {
 	enable := c.String("enable")
 	disable := c.String("disable")
 
-	if enable != "" {
+	enableAll := c.Bool("enable-all")
+	disableAll := c.Bool("disable-all")
+
+	if enableAll {
+		fmt.Println("Enabling all rules.")
+		gs.EnableRule(".*")
+	} else if disableAll {
+		fmt.Println("Disabling all rules.")
+		gs.DisableRule(".*")
+	}
+
+	// "all" represents that either enableAll or disableAll was triggered.
+	all := (enableAll || disableAll)
+
+	// If neither enableAll nor disableAll were used, let's look into doing
+	// individual enable and/or disable operations.
+	// Useful because in a single command you can specify both an --enable flag
+	// and a --disable flag but only want to do it if neither enable-all or disable-all were used.
+	if !all && enable != "" {
 		gs.EnableRule(enable)
 	}
 
-	if disable != "" {
+	if !all && disable != "" {
 		gs.DisableRule(disable)
 	}
 
