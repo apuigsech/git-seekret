@@ -35,11 +35,11 @@ Follow the instructions for installing Glide: https://github.com/Masterminds/gli
 	glide install
 	go build
 
-This builds a binary ``git-seekret``.  To place in standard go installed binaries
+This builds a binary ``git-seekret``.  Currently, there is no cross platform  way to install ``git-seekret`` (e.g. Install via Brew for OS X). To make the binary widely available to the user, you need to copy it to the system's ``bin`` folder.
 
 ::
 
-        go install
+        cp ./git-seekret /usr/local/bin
 
 Usage
 =====
