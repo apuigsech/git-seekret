@@ -14,7 +14,7 @@ func GitSeekretConfig(c *cli.Context) error {
 			return err
 		}
 	} else {
-		err := gs.LoadConfig(false)
+		err := gs.LoadConfig(true)
 		if git.IsErrorClass(err, git.ErrClassConfig) {
 			return fmt.Errorf("Config not initialised - Try: 'git-seekret config --init'")
 		}
