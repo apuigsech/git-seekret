@@ -16,17 +16,18 @@ func GitSeekretCheck(c *cli.Context) error {
 	}
 
 	options := map[string]interface{}{
-		"commit": false,
-		"staged": false,
+		"commit-files": false,
+		"staged-files": false,
 	}
 
 	if c.IsSet("commit") {
-		options["commit"] = true
-		options["commitcount"] = c.Int("commit")
+		options["commit-files"] = true
+		options["commit-messages"] = true
+		options["commit-count"] = c.Int("commit")
 	}
 
 	if c.IsSet("staged") {
-		options["staged"] = true
+		options["staged-files"] = true
 	}
 
 	secrets, err := gs.RunCheck(options)
